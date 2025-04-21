@@ -1,6 +1,6 @@
 [submodule "tonly-bsp"]
 	path = tonly-bsp
-	url = https://github.com/tonlyipc/tonly-bsp.git
+	url = git@github.com:tonlyipc/tonly-bsp.git
 [submodule "kugle"]
 	path = kugle
-	url = https://github.com/tonlyipc/kugle.git
+	url = git@github.com:tonlyipc/kugle.git
