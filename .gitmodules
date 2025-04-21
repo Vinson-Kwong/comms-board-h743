@@ -1,0 +1,3 @@
+[submodule "tonly-bsp"]
+	path = tonly-bsp
+	url = https://github.com/tonlyipc/tonly-bsp.git
