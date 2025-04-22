@@ -6,7 +6,7 @@
     "configurations": [
         {
             "cwd": "${workspaceRoot}",
-            "executable": "build/Debug/ballbot.elf",
+            "executable": "build/Debug/comms-board-h743.elf",
             "name": "Debug in Windows",
             "request": "launch",
             "type": "cortex-debug",
@@ -24,7 +24,7 @@
         },
         {
             "cwd": "${workspaceRoot}",
-            "executable": "build/ballbot.elf",
+            "executable": "build/comms-board-h743.elf",
             "name": "Debug in Linux",
             "request": "launch",
             "type": "cortex-debug",

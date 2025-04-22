@@ -11,9 +11,55 @@
 extern FDCAN_HandleTypeDef hfdcan1;
 extern UART_HandleTypeDef huart2;
 
+UART *uartLog = NULL;
+
+extern "C" {
+
+// 串口输出重定向
+#ifdef __GNUC__
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#else
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#endif 
+PUTCHAR_PROTOTYPE
+{
+  if (uartLog) {
+    uartLog->Write((uint8_t *)&ch, 1);
+  } else {
+    HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+  }
+  return ch;
+}
+
+// 串口输入重定向
+#ifdef __GNUC__
+int __io_getchar (void)
+#else
+int fgetc (FILE *f)
+#endif /* __GNUC__ */
+{
+  uint8_t ch = 0;
+  if (uartLog) {
+    ch = uartLog->ReadBlocking();
+  } else {
+    HAL_UART_Receive(&huart2, (uint8_t*)&ch, 1, HAL_MAX_DELAY);
+  }
+  return ch;
+}
+
+} // extern "C"
+
 void MainTask(void const *pvParameters)
 {
     int ret = 0;
+
+    // init uart for log
+    uartLog = new UART(&huart2);
+    if (uartLog == NULL) {
+        TL_LOG_E("UART object creation failed!");
+        return;
+    }
+    uartLog->RegisterRXcallback(NULL, uartLog, 0);
 
     FDCAN *fdcan = new FDCAN(&hfdcan1);
     if (fdcan == NULL) {
@@ -40,12 +86,12 @@ void MainTask(void const *pvParameters)
     }
 
     // init uart for xsens IMU (MTi630)
-    UART *uart = new UART(&huart2);
-    MTI200 *mti = new MTI200(uart);
-    if (mti == NULL) {
-        TL_LOG_E("MTI200 object creation failed!");
-    }
-    mti->Configure(200); // 200Hz sample rate
+    // UART *uart = new UART(&huart2);
+    // MTI200 *mti = new MTI200(uart);
+    // if (mti == NULL) {
+    //     TL_LOG_E("MTI200 object creation failed!");
+    // }
+    // mti->Configure(200); // 200Hz sample rate
 
     // test motors
     if (motor1) {
@@ -80,13 +126,6 @@ void MainTask(void const *pvParameters)
             motor3->Disable();
         }  
     }
-
-    if (mti) delete mti;
-    if (motor1) delete motor1;
-    if (motor2) delete motor2;
-    if (motor3) delete motor3;
-    if (fdcan) delete fdcan;
-    if (uart) delete uart;
 
     return;
 }

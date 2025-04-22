@@ -4,8 +4,7 @@ add_library(cli_kit ${SOURCES})
 
 target_link_libraries(cli_kit PUBLIC 
     stm32cubemx
-    Libraries-includes
-    Libraries-tonly-bsp
+    tonly-includes
 )
 
 target_include_directories(cli_kit PUBLIC

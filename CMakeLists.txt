@@ -52,6 +52,8 @@ add_subdirectory(cmake/stm32cubemx)
 
 add_subdirectory(tonly-bsp)
 add_subdirectory(kugle)
+add_subdirectory(3rd-party)
+add_subdirectory(Apps)
 
 # Link directories setup
 target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
@@ -87,6 +89,8 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
     stm32cubemx
 
     # Add user defined libraries
+    3rd-party
+    cli_kit
     tonly-bsp
     kugle-devices
     kugle-applications
