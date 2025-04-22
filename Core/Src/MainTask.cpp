@@ -54,7 +54,7 @@ void MainTask(void const *pvParameters)
     int ret = 0;
 
     // init uart for log
-    uartLog = new UART(&huart2);
+    uartLog = new UART(&huart2, 115200, UART::UART_OP_MODE_INTERRUPT);
     if (uartLog == NULL) {
         TL_LOG_E("UART object creation failed!");
         return;
