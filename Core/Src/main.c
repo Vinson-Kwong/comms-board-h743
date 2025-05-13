@@ -28,6 +28,7 @@
 #include "cli_kit.h"
 #include "MainTask.h"
 // #include "KugleMainTask.h"
+#include "DigiLed.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -148,7 +149,7 @@ int main(void)
   MX_I2C1_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-
+  DigiLed_init(&hspi1);
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -467,16 +468,16 @@ static void MX_SPI1_Init(void)
   hspi1.Instance = SPI1;
   hspi1.Init.Mode = SPI_MODE_MASTER;
   hspi1.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi1.Init.DataSize = SPI_DATASIZE_4BIT;
+  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
   hspi1.Init.CRCPolynomial = 0x0;
-  hspi1.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
+  hspi1.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
   hspi1.Init.NSSPolarity = SPI_NSS_POLARITY_LOW;
   hspi1.Init.FifoThreshold = SPI_FIFO_THRESHOLD_01DATA;
   hspi1.Init.TxCRCInitializationPattern = SPI_CRC_INITIALIZATION_ALL_ZERO_PATTERN;
@@ -647,18 +648,24 @@ void StartDefaultTask(void const * argument)
   linenoiseSetLineBuffer(g_lineBuffer, LINE_BUFFER_SIZE);
   linenoiseSetDumbMode(1);
   /* Infinite loop */
+  uint32_t rgb;
   for(;;)
   {
-    char* line = linenoise(prompt);
-    /* Ignore empty lines */
-    if (line == NULL || line[0] == '\0' || line[0] == '\n' || line[0] == '\r') {
-      continue;
+    for (int i = 0; i < 24; i++) {
+        rgb = 0x1 << i;
+        global_brightness_effect(rgb, 1000);
     }
 
-    cmdline_process_command(line);
+    // char* line = linenoise(prompt);
+    // /* Ignore empty lines */
+    // if (line == NULL || line[0] == '\0' || line[0] == '\n' || line[0] == '\r') {
+    //   continue;
+    // }
 
-    /* linenoise allocates line buffer on the heap, so need to free it */
-    linenoiseFree(line);
+    // cmdline_process_command(line);
+
+    // /* linenoise allocates line buffer on the heap, so need to free it */
+    // linenoiseFree(line);
     // osDelay(500);
   }
   /* USER CODE END 5 */
