@@ -29,6 +29,7 @@
 #include "MainTask.h"
 // #include "KugleMainTask.h"
 #include "DigiLed.h"
+#include "WS2812.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -653,7 +654,8 @@ void StartDefaultTask(void const * argument)
   {
     for (int i = 0; i < 24; i++) {
         rgb = 0x1 << i;
-        global_brightness_effect(rgb, 1000);
+        // global_brightness_effect(rgb, 1000);
+        WS2812_global_brightness_effect(rgb);
     }
 
     // char* line = linenoise(prompt);
