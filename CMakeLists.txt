@@ -100,3 +100,17 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
     kugle-modules
     arm_cortexM7lfdp_math
 )
+
+# 确保工具链中的 objcopy 可用
+find_program(OBJCOPY arm-none-eabi-objcopy)
+if(NOT OBJCOPY)
+    message(FATAL_ERROR "arm-none-eabi-objcopy not found!")
+endif()
+
+# 添加自定义目标：生成 .bin 文件
+add_custom_command(
+    TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+    COMMAND ${OBJCOPY} -O binary $<TARGET_FILE:${CMAKE_PROJECT_NAME}> $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME}.bin
+    COMMENT "Generating ${CMAKE_PROJECT_NAME}.bin"
+    VERBATIM
+)
