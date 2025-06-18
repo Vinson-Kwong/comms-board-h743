@@ -71,6 +71,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
     Core/Src/MainTask.cpp
     Core/Src/DigiLed.c
+    Core/Src/WS2812.c
     # Core/Src/KugleMainTask.cpp
 )
 
